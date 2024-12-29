@@ -5,27 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d09f764f-5e81-405b-93d7-9a1dc18ea0f5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/ABDAProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dir/Nutrition_Physical_Activity_and_Obesity.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/read_me.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/regression/bayesian_hierarchical_logistic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/regression/bayesian_logistic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/group/group_column_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/obesity/obesity_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/predictor_utils/age.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/predictor_utils/data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/predictor_utils/gender.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/predictor_utils/income.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/predictor_utils/race.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/visualizer_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,7 +176,7 @@
       <workItem from="1735281785838" duration="22712000" />
       <workItem from="1735332912452" duration="7752000" />
       <workItem from="1735371751118" duration="53837000" />
-      <workItem from="1735459839232" duration="15934000" />
+      <workItem from="1735459839232" duration="16633000" />
     </task>
     <servers />
   </component>
