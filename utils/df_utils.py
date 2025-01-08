@@ -2,12 +2,12 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from utils.obesity.obesity_percentile_utils import process_obesity_with_75th_percentile
-from utils.predictor_utils.age import process_age_column
-from utils.predictor_utils.data import impute_data_value
-from utils.predictor_utils.education import preprocess_education
-from utils.predictor_utils.gender import impute_gender
-from utils.predictor_utils.income import impute_income
-from utils.predictor_utils.race import impute_race_ethnicity
+from utils.predictor.age import process_age_column
+from utils.predictor.data import impute_data_value
+from utils.predictor.education import preprocess_education
+from utils.predictor.gender import impute_gender
+from utils.predictor.income import impute_income
+from utils.predictor.race import impute_race_ethnicity
 from utils.validate_predictors import validate_predictors
 
 
@@ -58,25 +58,35 @@ def prepare_combined_data(path):
 
     return combined_data, df
 
-def split_combined_data(combined_data, target, sample_size=1000, test_split=0.2):
+def split_combined_data(combined_data, target, sample_size=None, test_split=0.2):
     """
     Splits the combined data into training and testing sets after stratified sampling.
     Arguments:
         combined_data: The processed and combined dataset.
         target: Target column name (e.g., 'Obese').
-        sample_size: Number of samples for stratified sampling.
-        test_split: Proportion of the data to use for testing.
+        sample_size: Number of samples for stratified sampling (default: full dataset size).
+        test_split: Proportion of the data to use for testing (default: 0.2).
     Returns:
         train_data: Training dataset.
         test_data: Testing dataset.
         predictors: List of predictors to use for modeling.
+        categorical_predictors: List of categorical predictors.
     """
-    # Define sample size and adjust dynamically
+    # Default sample_size to the full dataset size if not provided
+    if sample_size is None:
+        sample_size = len(combined_data)
+
+    # Check if the sample size is valid
     total_size = len(combined_data)
-    if sample_size >= total_size:
+    if sample_size > total_size:
         raise ValueError(f"[Error] sample_size ({sample_size}) cannot exceed total dataset size ({total_size})!")
 
+    # Calculate test size
     test_size = 1 - sample_size / total_size
+    if test_size <= 0.0 or test_size >= 1.0:
+        print(f"[Warning] Adjusting invalid test_size ({test_size}) to default value ({test_split}).")
+        test_size = test_split
+
     print(f"[Info] Stratified Sampling: Using sample_size={sample_size}, test_size={test_size:.2f}")
 
     # Perform stratified sampling
@@ -95,28 +105,29 @@ def split_combined_data(combined_data, target, sample_size=1000, test_split=0.2)
         random_state=42
     )
 
-    # Define predictors
-    behavioral_predictors = ['No_Physical_Activity', 'Low_Fruit_Consumption',
-                             'Low_Veg_Consumption']
+    # Define predictors dynamically
+    print("[Info] Defining predictors dynamically within split_combined_data...")
+    behavioral_predictors = ['No_Physical_Activity', 'Low_Fruit_Consumption', 'Low_Veg_Consumption']
     demographic_predictors = ['Age(years)', 'Income', 'Gender', 'Education']
     race_predictors = [col for col in combined_data.columns if col.startswith('Race_')]
+
+    # Combine predictors
     predictors = behavioral_predictors + demographic_predictors + race_predictors
 
-    # Convert categorical columns to numeric
-    if 'Education' in combined_data.columns and combined_data['Education'].dtype.name == 'category':
-        combined_data['Education'] = combined_data['Education'].astype(float)
-        print("[Info] Converted 'Education' to numeric type.")
+    # Define categorical predictors (currently only 'Education')
+    categorical_predictors = ['Education']
 
-    # Validate predictors
-    print("[Debug] Predictors before validation:")
-    print(predictors)
-    validate_predictors(combined_data, predictors)
+    # Debug: Print defined predictors
+    print("[Debug] Predictors defined within split_combined_data:", predictors)
+    print("[Debug] Categorical predictors defined within split_combined_data:", categorical_predictors)
 
-    # Debug predictors
-    print("[Debug] Predictors in use:")
-    print(predictors)
+    # Ensure all predictors are present in the data
+    missing_predictors = [col for col in predictors if col not in combined_data.columns]
+    if missing_predictors:
+        raise ValueError(f"[Error] Missing predictors in combined data: {missing_predictors}")
 
-    return train_data, test_data, predictors
+    # Return train/test splits, predictors, and categorical predictors
+    return train_data, test_data, predictors, categorical_predictors
 
 def reload_and_convert_columns(combined_data, original_df, columns):
     """

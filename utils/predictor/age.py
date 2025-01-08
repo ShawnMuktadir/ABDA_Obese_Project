@@ -1,29 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# === Helper Functions ===
-
-def normalize_column(column, column_name):
-    """
-    Normalizes a numeric column to have mean=0 and standard deviation=1.
-    Returns the normalized column, its mean, and standard deviation for reverse-scaling.
-    """
-    mean = column.mean(skipna=True)
-    std = column.std(skipna=True)
-    print(f"[Debug] Normalizing column: {column_name} - Mean: {mean:.2f}, Std: {std:.2f}")
-
-    if std > 0:
-        normalized_column = (column - mean) / std
-    else:
-        print(f"[Warning] Standard deviation of column '{column_name}' is 0. Skipping normalization.")
-        normalized_column = column  # Do not normalize if std=0
-
-    print(f"[Debug] First 5 original values in '{column_name}': {column.head(5).values}")
-    print(f"[Debug] First 5 normalized values in '{column_name}': {normalized_column.head(5).values}")
-
-    return normalized_column, mean, std
-
-
 def convert_age_to_midpoint(age_value):
     """
     Converts age ranges like '25 - 34' into midpoints,
@@ -57,10 +34,12 @@ def process_age_column(df):
         print("[Debug] Raw 'Age(years)' values before processing:")
         print(df['Age(years)'].head(20))
 
+        # Convert age ranges to numeric midpoints
         df['Age(years)'] = df['Age(years)'].apply(convert_age_to_midpoint)
-        print("[Debug] Processed 'Age(years)' values after conversion:")
-        print(df['Age(years)'].unique())
+        print("[Debug] Processed 'Age(years)' values after conversion to midpoints:")
+        print(df['Age(years)'].head(20))
 
+        # Check missing percentages
         missing_before = df['Age(years)'].isna().mean() * 100
         print(f"[Debug] Missing percentage in 'Age(years)' before imputation: {missing_before:.2f}%")
 
@@ -69,10 +48,21 @@ def process_age_column(df):
             group_means = df.groupby(['Gender', 'Race/Ethnicity'])['Age(years)'].transform('mean')
             df['Age(years)'] = df['Age(years)'].fillna(group_means)
 
+        # Global mean imputation for any remaining missing values
         age_mean = df['Age(years)'].mean(skipna=True)
         df['Age(years)'] = df['Age(years)'].fillna(age_mean)
 
         missing_after = df['Age(years)'].isna().mean() * 100
         print(f"[Debug] Missing percentage in 'Age(years)' after imputation: {missing_after:.2f}%")
+
+        # Confirm that the column is numeric
+        if pd.api.types.is_numeric_dtype(df['Age(years)']):
+            print("[Info] 'Age(years)' column successfully converted to numeric.")
+        else:
+            print("[Error] 'Age(years)' column conversion to numeric failed.")
+    else:
+        print("[Warning] 'Age(years)' column not found in the DataFrame. Adding placeholder values.")
+        df['Age(years)'] = -1  # Placeholder for missing column
+        print("[Debug] Added 'Age(years)' column with default value -1.")
 
     return df

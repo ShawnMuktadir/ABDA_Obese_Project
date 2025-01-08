@@ -5,112 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d09f764f-5e81-405b-93d7-9a1dc18ea0f5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_10.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_11.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_12.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_13.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_14.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_15.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_17.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_18.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_19.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_20.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_21.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_22.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_23.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_24.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_25.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_26.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_27.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_28.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_29.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_30.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_31.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_32.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_33.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_34.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_35.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_36.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_37.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_38.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_39.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_40.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_41.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_42.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_43.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_44.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_45.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_46.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_47.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_48.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_49.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_50.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_2024-12-31 19-33-09_9.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/df_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/predictor_utils/education.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/validate_predictors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/predictor_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_10.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_11.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_12.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_13.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_14.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_15.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_16.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_17.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_18.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_19.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_20.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_21.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_22.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_23.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_25.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_26.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_27.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_28.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_29.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_30.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_31.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_32.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_33.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_34.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_35.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_36.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_37.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_38.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_39.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_40.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_41.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_42.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_43.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plots/plot_2024-12-31 01-45-06_9.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/regression/bayesian_hierarchical_logistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/regression/bayesian_hierarchical_logistic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regression/bayesian_logistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/regression/bayesian_logistic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/group/group_column_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/group/group_column_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/location_race_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/location_race_map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/obesity/obesity_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/obesity/obesity_percentile_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/visualizer_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/visualizer_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/df_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/df_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/age.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/age.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/education.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/education.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/gender.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/gender.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/income.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/income.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/race.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/race.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,27 +56,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;education__test&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/shawn/PycharmProjects/ABDAProject/plots&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "Python.predictor_test.executor": "Run",
+    "Python.test.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "predictor__test",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/shawn/PycharmProjects/ABDAProject/plots",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: []
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": []
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\shawn\PycharmProjects\ABDAProject\regression" />
@@ -186,7 +90,7 @@
       <recent name="C:\Users\shawn\PycharmProjects\ABDAProject\utils\group" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ABDAProject" />
       <option name="ENV_FILES" value="" />
@@ -285,7 +189,11 @@
       <workItem from="1735544356875" duration="1206000" />
       <workItem from="1735586144719" duration="17693000" />
       <workItem from="1735639732781" duration="15903000" />
-      <workItem from="1735660071724" duration="8944000" />
+      <workItem from="1735660071724" duration="9155000" />
+      <workItem from="1735738363139" duration="1348000" />
+      <workItem from="1735825571760" duration="739000" />
+      <workItem from="1736176733456" duration="8675000" />
+      <workItem from="1736241373303" duration="32809000" />
     </task>
     <servers />
   </component>
@@ -304,7 +212,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ABDAProject$main.coverage" NAME="main Coverage Results" MODIFIED="1735668606601" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ABDAProject$main.coverage" NAME="main Coverage Results" MODIFIED="1736196237215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ABDAProject$test.coverage" NAME="test Coverage Results" MODIFIED="1735373265204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ABDAProject$predictor_test.coverage" NAME="predictor_test Coverage Results" MODIFIED="1736296383416" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
