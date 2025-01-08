@@ -1,4 +1,4 @@
-def impute_gender(df):
+def preprocess_gender(df):
     """
     Encodes the 'Gender' column as binary and imputes missing values.
     """

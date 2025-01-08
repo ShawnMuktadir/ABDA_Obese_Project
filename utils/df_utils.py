@@ -5,9 +5,9 @@ from utils.obesity.obesity_percentile_utils import process_obesity_with_75th_per
 from utils.predictor.age import process_age_column
 from utils.predictor.data import impute_data_value
 from utils.predictor.education import preprocess_education
-from utils.predictor.gender import impute_gender
-from utils.predictor.income import impute_income
-from utils.predictor.race import impute_race_ethnicity
+from utils.predictor.gender import preprocess_gender
+from utils.predictor.income import preprocess_income
+from utils.predictor.race import preprocess_race_ethnicity
 from utils.validate_predictors import validate_predictors
 
 
@@ -17,10 +17,10 @@ def preprocess_data(df):
     """
     print("[Start] Preprocessing pipeline.")
     df = process_age_column(df)
-    df = impute_income(df)
+    df = preprocess_income(df)
     df = impute_data_value(df)
-    df = impute_gender(df)
-    df = impute_race_ethnicity(df)
+    df = preprocess_gender(df)
+    df = preprocess_race_ethnicity(df)
     df = preprocess_education(df)
     return df
 

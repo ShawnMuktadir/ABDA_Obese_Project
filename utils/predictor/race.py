@@ -1,6 +1,6 @@
 import pandas as pd
 
-def impute_race_ethnicity(df):
+def preprocess_race_ethnicity(df):
     """
     Handles missing values in the 'Race/Ethnicity' column, one-hot encodes it,
     and ensures numeric data types.

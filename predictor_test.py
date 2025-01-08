@@ -1,13 +1,13 @@
 import pandas as pd
+from fontTools.ttx import process
 
 from utils.df_utils import split_combined_data
 from utils.predictor.age import process_age_column
 from utils.predictor.education import preprocess_education
-from utils.predictor.gender import impute_gender
-from utils.predictor.income import impute_income
-from utils.predictor.race import impute_race_ethnicity
+from utils.predictor.gender import preprocess_gender
+from utils.predictor.income import preprocess_income
+from utils.predictor.race import preprocess_race_ethnicity
 from utils.validate_predictors import validate_predictors
-
 
 def process_and_calculate_predictors(df):
     """
@@ -31,12 +31,12 @@ def process_and_calculate_predictors(df):
 
     # Process Gender predictor
     if 'Gender' in df.columns:
-        df = impute_gender(df)
+        df = preprocess_gender(df)
         print("[Debug] Gender predictor processed.")
 
     # Process Income predictor
     if 'Income' in df.columns:
-        df = impute_income(df)
+        df = preprocess_income(df)
         print("[Debug] Income predictor processed.")
 
     # Process Education predictor
@@ -46,8 +46,23 @@ def process_and_calculate_predictors(df):
 
     # Process Race predictor
     if 'Race/Ethnicity' in df.columns:
-        df = impute_race_ethnicity(df)
+        df = preprocess_race_ethnicity(df)
         print("[Debug] Race predictor processed.")
+
+    # Process LocationDesc predictor
+    if 'LocationDesc' in df.columns:
+        df['LocationDesc'] = df['LocationDesc'].astype('category')
+        print("[Debug] Converted 'LocationDesc' to categorical. Unique values:")
+        print(df['LocationDesc'].cat.categories)
+
+    # Process YearStart predictor
+    if 'YearStart' in df.columns:
+        year_min = df['YearStart'].min()
+        df['Years Since Min'] = df['YearStart'] - year_min
+        print(f"[Debug] Created 'Years Since Min' column with min year: {year_min}")
+        print(df[['YearStart', 'Years Since Min']].head(5))
+    else:
+        print("[Warning] 'YearStart' column not found in the DataFrame.")
 
     print("[Info] All predictors processed successfully.")
     return df
@@ -55,9 +70,6 @@ def process_and_calculate_predictors(df):
 def define_predictors(df):
     """
     Define predictors for modeling based on the processed data.
-    Returns:
-        predictors: List of all predictors (numeric + one-hot encoded).
-        categorical_predictors: List of categorical predictors.
     """
     print("[Info] Defining predictors...")
 
@@ -72,20 +84,29 @@ def define_predictors(df):
 
     # Race predictors (one-hot encoded)
     race_predictors = [col for col in df.columns if col.startswith('Race_')]
-    if race_predictors:
-        print("[Info] Race predictors successfully identified:", race_predictors)
-    else:
-        print("[Warning] No race predictors found after processing.")
 
     # Categorical predictors
-    categorical_predictors = [col for col in demographic_predictors if col in df.columns and pd.api.types.is_categorical_dtype(df[col])]
+    categorical_predictors = [
+        col for col in demographic_predictors
+        if col in df.columns and isinstance(df[col].dtype, pd.CategoricalDtype)
+    ]
+
+    # Location and Year predictors
+    location_predictors = ['LocationDesc']
+    year_predictors = ['Years Since Min'] if 'Years Since Min' in df.columns else []
+    print("[Debug] Location and year predictors:", location_predictors + year_predictors)
 
     # Combine all predictors
-    predictors = behavioral_predictors + demographic_predictors + race_predictors
+    predictors = (
+        behavioral_predictors
+        + demographic_predictors
+        + race_predictors
+        + location_predictors
+        + year_predictors
+    )
 
     # Debug: Final predictors
-    print("[Debug] Numeric + One-Hot Encoded Predictors:", predictors)
-    print("[Debug] Categorical Predictors:", categorical_predictors)
+    print("[Debug] Final predictors list:", predictors)
 
     return predictors, categorical_predictors
 
@@ -106,11 +127,12 @@ def validate_and_prepare_data(df, predictors, categorical_predictors):
             raise TypeError(f"[Error] Predictor '{predictor}' is not numeric. Current type: {df[predictor].dtype}")
 
     for predictor in categorical_predictors:
-        if not pd.api.types.is_categorical_dtype(df[predictor]):
+        if not isinstance(df[predictor].dtype, pd.CategoricalDtype):
             raise TypeError(
                 f"[Error] Predictor '{predictor}' is not categorical. Current type: {df[predictor].dtype}")
 
         print("[Info] Predictors validated successfully.")
+
 
 def summarize_predictor_statistics(data, predictors, categorical_predictors=None):
     """
@@ -131,10 +153,26 @@ def summarize_predictor_statistics(data, predictors, categorical_predictors=None
         col for col in predictors
         if pd.api.types.is_numeric_dtype(data[col]) and not col.startswith('Race_')
     ]
+
+    print("[Debug] 1st Identified numeric predictors:", numeric_predictors)
+
     if categorical_predictors is None:
         categorical_predictors = [
-            col for col in predictors if pd.api.types.is_categorical_dtype(data[col])
+            col for col in predictors if isinstance(data[col].dtype, pd.CategoricalDtype)
         ]
+
+    # Include `LocationDesc` as categorical
+    if 'LocationDesc' in data.columns and isinstance(data['LocationDesc'].dtype, pd.CategoricalDtype):
+        if 'LocationDesc' not in categorical_predictors:
+            print("[Debug] 'LocationDesc' is present in DataFrame but not included in categorical predictors.")
+            categorical_predictors.append('LocationDesc')
+
+    # Include `Years Since Min` as numeric
+    if 'Years Since Min' in data.columns and pd.api.types.is_numeric_dtype(data['Years Since Min']):
+        if 'Years Since Min' not in numeric_predictors:
+            print("[Debug] 'Years Since Min' is present in DataFrame but not included in numeric predictors.")
+            numeric_predictors.append('Years Since Min')
+
     one_hot_encoded_predictors = [col for col in predictors if col.startswith('Race_')]
 
     print("[Debug] Identified numeric predictors:", numeric_predictors)
@@ -143,6 +181,8 @@ def summarize_predictor_statistics(data, predictors, categorical_predictors=None
 
     # Summarize numeric predictors
     numeric_stats = data[numeric_predictors].describe().T if numeric_predictors else None
+    if "Years Since Min" not in numeric_predictors and "Years Since Min" in data.columns:
+        print("[Warning] 'Years Since Min' is present in DataFrame but not included in numeric predictors.")
 
     # Summarize categorical predictors
     categorical_summary = {}
@@ -181,7 +221,6 @@ def summarize_predictor_statistics(data, predictors, categorical_predictors=None
 
     return numeric_stats, categorical_stats, one_hot_stats
 
-
 def process_obesity_data(df):
     """
     Process the dataset to include Obese classification and integrate indirect questions.
@@ -215,12 +254,20 @@ def process_obesity_data(df):
         how='left'
     )
 
-    # Pivot table to transform indirect questions into columns
     combined_data = combined_data.pivot_table(
         index=['YearStart', 'LocationDesc', 'Obese'],
         columns='Question',
         values='Data_Value'
     ).reset_index()
+
+    # Ensure 'Years Since Min' is carried forward
+    if 'Years Since Min' in df.columns:
+        combined_data = pd.merge(
+            combined_data,
+            df[['YearStart', 'Years Since Min']].drop_duplicates(),
+            on='YearStart',
+            how='left'
+        )
 
     # Rename columns for clarity
     combined_data.rename(columns={
@@ -229,40 +276,91 @@ def process_obesity_data(df):
         'Percent of adults who report consuming vegetables less than one time daily': 'Low_Veg_Consumption'
     }, inplace=True)
 
+    # Debug: Print columns before merging demographic data
+    print("[Debug] Combined data columns before merging demographic and race predictors:", combined_data.columns.tolist())
+
+    # Ensure unique 'LocationDesc' before merging
+    df = df.drop_duplicates(subset=['YearStart', 'LocationDesc'])
+
     # Add demographic and race predictors
     demographic_cols = ['Age(years)', 'Income', 'Gender', 'Education']
     race_cols = [col for col in df.columns if col.startswith('Race_')]
 
     all_predictors = demographic_cols + race_cols
+
+    # Drop duplicate 'LocationDesc' column from combined_data if it exists
+    if combined_data.columns.duplicated().any():
+        print("[Warning] Duplicated columns found. Removing duplicates...")
+        combined_data = combined_data.loc[:, ~combined_data.columns.duplicated()]
+
     combined_data = pd.merge(
         combined_data,
-        df[['YearStart', 'LocationDesc'] + all_predictors].drop_duplicates(),
+        df[['YearStart', 'LocationDesc'] + all_predictors],
         on=['YearStart', 'LocationDesc'],
         how='left'
     )
 
+    # Debug: Check for duplicate columns after merging
+    duplicate_columns = combined_data.columns[combined_data.columns.duplicated()].tolist()
+    if duplicate_columns:
+        print(f"[Warning] Duplicate columns found after merging: {duplicate_columns}")
+
     # Debugging the final structure
     print("[Info] Indirect questions processed and included in combined data.")
     print("[Debug] Combined data columns after merging demographic and race predictors:", combined_data.columns.tolist())
+    print("[Debug] Combined data head:", combined_data.head(10))
 
+    # Debug: Check for YearStart
+    if 'YearStart' not in combined_data.columns:
+        print("[Error] 'YearStart' column missing in combined_data after processing.")
+    else:
+        print("[Debug] 'YearStart' column exists in combined_data.")
+
+    print("[Debug] Combined data columns after processing:")
+    print(combined_data.columns.tolist())
     return combined_data
 
+def analyze_unused_columns(df, used_columns):
+    """
+    Analyze unused columns and their potential as predictors.
+    """
+    print("[Info] Analyzing unused columns...")
+    unused_columns = [col for col in df.columns if col not in used_columns]
+
+    print("[Debug] Unused columns in DataFrame:", unused_columns)
+
+    numeric_unused = df[unused_columns].select_dtypes(include='number').describe().T
+    categorical_unused = df[unused_columns].select_dtypes(include=['object', 'category'])
+
+    for col in categorical_unused.columns:
+        print(f"[Debug] Unique values in {col}: {categorical_unused[col].unique()}")
+        print(f"[Debug] Value counts for {col}:")
+        print(categorical_unused[col].value_counts())
+
+    return numeric_unused, categorical_unused
+
 def main():
+    """
+    Main function to execute the workflow.
+    """
     file_path = 'dir/Nutrition_Physical_Activity_and_Obesity.csv'
 
     # Step 1: Load and preprocess data
     df = pd.read_csv(file_path)
     df = process_and_calculate_predictors(df)
 
+
     # Step 2: Process Obesity Data
     combined_data = process_obesity_data(df)
 
-    # Step 3: Split Data and Define Predictors
+    # Step 3: Define Predictors
+    predictors, categorical_predictors = define_predictors(combined_data)
+
+    # Step 4: Split Data and Validate Predictors
     train_data, test_data, predictors, categorical_predictors = split_combined_data(
         combined_data, target='Obese'
     )
 
-    # Step 4: Validate and Prepare Data
     validate_and_prepare_data(combined_data, predictors, categorical_predictors)
 
     # Step 5: Summarize Predictors

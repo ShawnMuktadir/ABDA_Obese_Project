@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d09f764f-5e81-405b-93d7-9a1dc18ea0f5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/predictor_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/predictor_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/predictor_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/df_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/df_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/age.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/age.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/education.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/education.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/gender.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/gender.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/income.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/income.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/predictor_utils/race.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/race.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor/gender.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/gender.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor/income.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/income.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/predictor/race.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/predictor/race.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +55,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.education.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.predictor_test.executor": "Run",
+    "Python.predictor_test.executor": "Debug",
     "Python.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -193,7 +191,8 @@
       <workItem from="1735738363139" duration="1348000" />
       <workItem from="1735825571760" duration="739000" />
       <workItem from="1736176733456" duration="8675000" />
-      <workItem from="1736241373303" duration="32809000" />
+      <workItem from="1736241373303" duration="33035000" />
+      <workItem from="1736342019551" duration="13205000" />
     </task>
     <servers />
   </component>
@@ -213,7 +212,8 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ABDAProject$main.coverage" NAME="main Coverage Results" MODIFIED="1736196237215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ABDAProject$education.coverage" NAME="education Coverage Results" MODIFIED="1736296467670" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/predictor" />
     <SUITE FILE_PATH="coverage/ABDAProject$test.coverage" NAME="test Coverage Results" MODIFIED="1735373265204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ABDAProject$predictor_test.coverage" NAME="predictor_test Coverage Results" MODIFIED="1736296383416" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ABDAProject$predictor_test.coverage" NAME="predictor_test Coverage Results" MODIFIED="1736359168098" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

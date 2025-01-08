@@ -3,7 +3,7 @@ import numpy as np
 
 # === Helper Functions ===
 
-def impute_income(df):
+def preprocess_income(df):
     """
     Processes and imputes the 'Income' column.
     """
