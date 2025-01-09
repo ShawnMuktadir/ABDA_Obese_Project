@@ -58,19 +58,20 @@ def prepare_combined_data(path):
 
     return combined_data, df
 
-def split_combined_data(combined_data, target, sample_size=None, test_split=0.2):
+def split_combined_data(combined_data, target, predictors, categorical_predictors, sample_size=None, test_split=0.2):
     """
     Splits the combined data into training and testing sets after stratified sampling.
     Arguments:
         combined_data: The processed and combined dataset.
         target: Target column name (e.g., 'Obese').
-        sample_size: Number of samples for stratified sampling (default: full dataset size).
-        test_split: Proportion of the data to use for testing (default: 0.2).
+        predictors: List of predictors to use for modeling.
+        categorical_predictors: List of categorical predictors.
+        sample_size: Number of samples for stratified sampling.
+        test_split: Proportion of the data to use for testing.
     Returns:
         train_data: Training dataset.
         test_data: Testing dataset.
         predictors: List of predictors to use for modeling.
-        categorical_predictors: List of categorical predictors.
     """
     # Default sample_size to the full dataset size if not provided
     if sample_size is None:
@@ -105,29 +106,11 @@ def split_combined_data(combined_data, target, sample_size=None, test_split=0.2)
         random_state=42
     )
 
-    # Define predictors dynamically
-    print("[Info] Defining predictors dynamically within split_combined_data...")
-    behavioral_predictors = ['No_Physical_Activity', 'Low_Fruit_Consumption', 'Low_Veg_Consumption']
-    demographic_predictors = ['Age(years)', 'Income', 'Gender', 'Education']
-    race_predictors = [col for col in combined_data.columns if col.startswith('Race_')]
-
-    # Combine predictors
-    predictors = behavioral_predictors + demographic_predictors + race_predictors
-
-    # Define categorical predictors (currently only 'Education')
-    categorical_predictors = ['Education']
-
-    # Debug: Print defined predictors
+    # Debug: Check predictors
     print("[Debug] Predictors defined within split_combined_data:", predictors)
     print("[Debug] Categorical predictors defined within split_combined_data:", categorical_predictors)
 
-    # Ensure all predictors are present in the data
-    missing_predictors = [col for col in predictors if col not in combined_data.columns]
-    if missing_predictors:
-        raise ValueError(f"[Error] Missing predictors in combined data: {missing_predictors}")
-
-    # Return train/test splits, predictors, and categorical predictors
-    return train_data, test_data, predictors, categorical_predictors
+    return train_data, test_data
 
 def reload_and_convert_columns(combined_data, original_df, columns):
     """

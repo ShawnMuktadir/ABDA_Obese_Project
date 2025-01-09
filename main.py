@@ -12,7 +12,7 @@ from utils.bayesian_model_utils import (
 )
 from utils.df_utils import prepare_combined_data, reload_and_convert_columns, split_combined_data
 from utils.location_race_map import generate_mappings
-from utils.visualizer_utils import VisualizerUtils
+from utils.visualize_utils import VisualizerUtils
 
 
 def main():

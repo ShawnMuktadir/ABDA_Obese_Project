@@ -1,13 +1,14 @@
 import pandas as pd
-from fontTools.ttx import process
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 from utils.df_utils import split_combined_data
 from utils.predictor.age import process_age_column
 from utils.predictor.education import preprocess_education
 from utils.predictor.gender import preprocess_gender
 from utils.predictor.income import preprocess_income
+from utils.predictor.location_desc import preprocess_location
 from utils.predictor.race import preprocess_race_ethnicity
-from utils.validate_predictors import validate_predictors
 
 def process_and_calculate_predictors(df):
     """
@@ -51,9 +52,8 @@ def process_and_calculate_predictors(df):
 
     # Process LocationDesc predictor
     if 'LocationDesc' in df.columns:
-        df['LocationDesc'] = df['LocationDesc'].astype('category')
-        print("[Debug] Converted 'LocationDesc' to categorical. Unique values:")
-        print(df['LocationDesc'].cat.categories)
+        df = preprocess_location(df)
+        print("[Debug] LocationDesc predictor processed.")
 
     # Process YearStart predictor
     if 'YearStart' in df.columns:
@@ -70,43 +70,49 @@ def process_and_calculate_predictors(df):
 def define_predictors(df):
     """
     Define predictors for modeling based on the processed data.
+    Returns:
+        predictors: List of all predictors (numeric + one-hot encoded).
+        categorical_predictors: List of categorical predictors.
     """
     print("[Info] Defining predictors...")
-
-    # Debug: Print available columns
-    print("[Debug] DataFrame columns before defining predictors:", df.columns.tolist())
 
     # Behavioral predictors
     behavioral_predictors = ['No_Physical_Activity', 'Low_Fruit_Consumption', 'Low_Veg_Consumption']
 
     # Demographic predictors
-    demographic_predictors = ['Age(years)', 'Income', 'Gender', 'Education']
+    demographic_numeric = ['Age(years)', 'Income']
+    demographic_categorical = ['Gender', 'Education', 'LocationDesc']
+
+    # Ensure 'Gender', 'Education', and 'LocationDesc' are processed as categorical
+    categorical_predictors = [
+        col for col in demographic_categorical
+        if col in df.columns and isinstance(df[col].dtype, pd.CategoricalDtype)
+    ]
+
+    # Validate numeric demographic predictors
+    numeric_predictors = [
+        col for col in demographic_numeric if col in df.columns and pd.api.types.is_numeric_dtype(df[col])
+    ]
+
+    # Combine numeric and categorical predictors
+    demographic_predictors = numeric_predictors + categorical_predictors
 
     # Race predictors (one-hot encoded)
     race_predictors = [col for col in df.columns if col.startswith('Race_')]
 
-    # Categorical predictors
-    categorical_predictors = [
-        col for col in demographic_predictors
-        if col in df.columns and isinstance(df[col].dtype, pd.CategoricalDtype)
-    ]
-
     # Location and Year predictors
-    location_predictors = ['LocationDesc']
+    location_predictors = ['LocationDesc'] if 'LocationDesc' in categorical_predictors else []
     year_predictors = ['Years Since Min'] if 'Years Since Min' in df.columns else []
-    print("[Debug] Location and year predictors:", location_predictors + year_predictors)
 
     # Combine all predictors
-    predictors = (
-        behavioral_predictors
-        + demographic_predictors
-        + race_predictors
-        + location_predictors
-        + year_predictors
-    )
+    predictors = (behavioral_predictors + demographic_predictors + race_predictors
+                  + location_predictors + year_predictors)
 
     # Debug: Final predictors
     print("[Debug] Final predictors list:", predictors)
+    print("[Debug] Final predictors list length:", {len(predictors)})
+    print("[Debug] Numeric + One-Hot Encoded Predictors:", numeric_predictors + race_predictors + year_predictors)
+    print("[Debug] Categorical Predictors:", categorical_predictors)
 
     return predictors, categorical_predictors
 
@@ -117,30 +123,31 @@ def validate_and_prepare_data(df, predictors, categorical_predictors):
         available_columns = df.columns.tolist()
         raise KeyError(f"[Error] Missing predictors in DataFrame: {missing_predictors}. "
                        f"Available columns: {available_columns}")
-    # Validate numeric predictors
-    numeric_predictors = [col for col in predictors if col not in categorical_predictors]
-    validate_predictors(df, numeric_predictors)
 
-    # Ensure all predictors are numeric or categorical as expected
+    # Separate numeric predictors correctly
+    numeric_predictors = [
+        col for col in predictors
+        if col not in categorical_predictors and not col.startswith('Race_')
+    ]
+    print("[Debug] validate_and_prepare_data Numeric predictors for validation:", numeric_predictors)
+    print("[Debug] validate_and_prepare_data Categorical predictors for validation:", categorical_predictors)
+
+    # Validate numeric predictors
     for predictor in numeric_predictors:
         if not pd.api.types.is_numeric_dtype(df[predictor]):
             raise TypeError(f"[Error] Predictor '{predictor}' is not numeric. Current type: {df[predictor].dtype}")
 
+    # Validate categorical predictors
     for predictor in categorical_predictors:
         if not isinstance(df[predictor].dtype, pd.CategoricalDtype):
             raise TypeError(
                 f"[Error] Predictor '{predictor}' is not categorical. Current type: {df[predictor].dtype}")
 
-        print("[Info] Predictors validated successfully.")
+    print("[Info] Predictors validated successfully.")
 
-
-def summarize_predictor_statistics(data, predictors, categorical_predictors=None):
+def summarize_predictor_statistics(data, predictors):
     """
     Summarize descriptive statistics for numeric, categorical, and one-hot encoded predictors.
-    Arguments:
-        data: DataFrame containing the dataset.
-        predictors: List of predictor column names.
-        categorical_predictors: Optional list of categorical predictor column names.
     """
     print("[Info] Summarizing predictor statistics...")
 
@@ -153,36 +160,26 @@ def summarize_predictor_statistics(data, predictors, categorical_predictors=None
         col for col in predictors
         if pd.api.types.is_numeric_dtype(data[col]) and not col.startswith('Race_')
     ]
+    categorical_predictors = [
+        col for col in predictors
+        if isinstance(data[col].dtype, pd.CategoricalDtype)
+    ]
 
-    print("[Debug] 1st Identified numeric predictors:", numeric_predictors)
-
-    if categorical_predictors is None:
-        categorical_predictors = [
-            col for col in predictors if isinstance(data[col].dtype, pd.CategoricalDtype)
-        ]
-
-    # Include `LocationDesc` as categorical
-    if 'LocationDesc' in data.columns and isinstance(data['LocationDesc'].dtype, pd.CategoricalDtype):
-        if 'LocationDesc' not in categorical_predictors:
-            print("[Debug] 'LocationDesc' is present in DataFrame but not included in categorical predictors.")
-            categorical_predictors.append('LocationDesc')
-
-    # Include `Years Since Min` as numeric
-    if 'Years Since Min' in data.columns and pd.api.types.is_numeric_dtype(data['Years Since Min']):
-        if 'Years Since Min' not in numeric_predictors:
-            print("[Debug] 'Years Since Min' is present in DataFrame but not included in numeric predictors.")
-            numeric_predictors.append('Years Since Min')
+    # Ensure 'Gender' and 'LocationDesc' are included in categorical predictors
+    #additional_categoricals = ['Gender', 'LocationDesc']
+    #for col in additional_categoricals:
+    #    if col in data.columns and col not in categorical_predictors:
+    #        if isinstance(data[col].dtype, pd.CategoricalDtype):
+    #            categorical_predictors.append(col)
 
     one_hot_encoded_predictors = [col for col in predictors if col.startswith('Race_')]
 
-    print("[Debug] Identified numeric predictors:", numeric_predictors)
-    print("[Debug] Identified categorical predictors:", categorical_predictors)
-    print("[Debug] Identified one-hot encoded predictors:", one_hot_encoded_predictors)
+    print("[Debug] summarize_predictor_statistics Identified numeric predictors:", numeric_predictors)
+    print("[Debug] summarize_predictor_statistics Identified categorical predictors:", categorical_predictors)
+    print("[Debug] summarize_predictor_statistics Identified one-hot encoded predictors:", one_hot_encoded_predictors)
 
     # Summarize numeric predictors
     numeric_stats = data[numeric_predictors].describe().T if numeric_predictors else None
-    if "Years Since Min" not in numeric_predictors and "Years Since Min" in data.columns:
-        print("[Warning] 'Years Since Min' is present in DataFrame but not included in numeric predictors.")
 
     # Summarize categorical predictors
     categorical_summary = {}
@@ -203,7 +200,7 @@ def summarize_predictor_statistics(data, predictors, categorical_predictors=None
     # Summarize one-hot encoded predictors
     one_hot_summary = {}
     for col in one_hot_encoded_predictors:
-        print(f"[Debug] Processing one-hot encoded predictor: {col}")
+        #print(f"[Debug] Processing one-hot encoded predictor: {col}")
         one_hot_summary[col] = {
             "Sum": data[col].sum(),
             "Mean": data[col].mean()
@@ -339,6 +336,106 @@ def analyze_unused_columns(df, used_columns):
 
     return numeric_unused, categorical_unused
 
+def analyze_dataset_completeness(data, numeric_predictors, categorical_predictors):
+    """
+    Analyze the total dataset size and the size of calculable data for modeling.
+    Arguments:
+        data: DataFrame containing the dataset.
+        numeric_predictors: List of numeric predictor column names.
+        categorical_predictors: List of categorical predictor column names.
+    """
+    print(f"[Info] Total dataset size: {data.shape[0]} rows, {data.shape[1]} columns")
+
+    # Numeric completeness
+    numeric_complete = data[numeric_predictors].notnull().all(axis=1)
+
+    # Categorical completeness
+    categorical_complete = ~data[categorical_predictors].isin(["Unknown"]).any(axis=1)
+
+    # Combined completeness
+    calculable_data_mask = numeric_complete & categorical_complete
+    calculable_data_size = calculable_data_mask.sum()
+
+    # Percentage of calculable data
+    calculable_percentage = (calculable_data_size / data.shape[0]) * 100
+
+    print(f"[Info] Total calculable data size: {calculable_data_size} rows")
+    print(f"[Info] Percentage of calculable data: {calculable_percentage:.2f}%")
+
+    return calculable_data_size, calculable_percentage
+
+def visualize_predictor_completeness(data, predictors):
+    """
+    Visualize completeness of predictors as a bar chart.
+    """
+    print("[Info] Visualizing predictor completeness...")
+
+    completeness = {
+        predictor: data[predictor].notnull().mean() * 100 for predictor in predictors
+    }
+
+    # Convert completeness to DataFrame for visualization
+    completeness_df = pd.DataFrame(list(completeness.items()), columns=['Predictor', 'Completeness (%)'])
+
+    # Sort by completeness
+    completeness_df.sort_values(by='Completeness (%)', ascending=False, inplace=True)
+
+    # Plot
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='Completeness (%)', y='Predictor', data=completeness_df, palette='coolwarm')
+    plt.title("Completeness of Predictors", fontsize=16)
+    plt.xlabel("Completeness (%)", fontsize=12)
+    plt.ylabel("Predictors", fontsize=12)
+    plt.tight_layout()
+    plt.show()
+
+def visualize_numeric_predictor_relationships(data, numeric_predictors, target):
+    """
+    Create scatterplots for numeric predictors against the target variable.
+    """
+    print("[Info] Visualizing relationships for numeric predictors...")
+
+    for predictor in numeric_predictors:
+        plt.figure(figsize=(10, 6))
+        sns.scatterplot(x=predictor, y=target, data=data, alpha=0.6, color="blue")
+        plt.title(f"Relationship of {predictor} with {target}", fontsize=16)
+        plt.xlabel(predictor, fontsize=12)
+        plt.ylabel(target, fontsize=12)
+        plt.tight_layout()
+        plt.show()
+
+def visualize_categorical_predictor_relationships(data, categorical_predictors, target):
+    """
+    Create bar charts for categorical predictors against the target variable.
+    """
+    print("[Info] Visualizing relationships for categorical predictors...")
+
+    for predictor in categorical_predictors:
+        plt.figure(figsize=(12, 6))
+        sns.countplot(x=predictor, hue=target, data=data, palette='viridis')
+        plt.title(f"Relationship of {predictor} with {target}", fontsize=16)
+        plt.xlabel(predictor, fontsize=12)
+        plt.ylabel("Count", fontsize=12)
+        plt.xticks(rotation=45, ha="right")
+        plt.legend(title=target)
+        plt.tight_layout()
+        plt.show()
+
+def summarize_and_visualize_dataset(data, predictors, numeric_predictors, categorical_predictors, target):
+    """
+    Summarize and visualize dataset completeness and relationships with the target.
+    """
+    print("[Info] Summarizing and visualizing dataset...")
+
+    # Visualize completeness
+    visualize_predictor_completeness(data, predictors)
+
+    # Visualize numeric predictors vs. target
+    visualize_numeric_predictor_relationships(data, numeric_predictors, target)
+
+    # Visualize categorical predictors vs. target
+    visualize_categorical_predictor_relationships(data, categorical_predictors, target)
+
 def main():
     """
     Main function to execute the workflow.
@@ -347,8 +444,15 @@ def main():
 
     # Step 1: Load and preprocess data
     df = pd.read_csv(file_path)
-    df = process_and_calculate_predictors(df)
+    # Get the column names
+    column_names = df.columns.tolist()
 
+    # Print the column names
+    print("Column names:")
+    print(f"Number of columns: {len(column_names)}")
+    for col in column_names:
+        print(col)
+    df = process_and_calculate_predictors(df)
 
     # Step 2: Process Obesity Data
     combined_data = process_obesity_data(df)
@@ -357,14 +461,41 @@ def main():
     predictors, categorical_predictors = define_predictors(combined_data)
 
     # Step 4: Split Data and Validate Predictors
-    train_data, test_data, predictors, categorical_predictors = split_combined_data(
-        combined_data, target='Obese'
+    train_data, test_data = split_combined_data(
+        combined_data, target='Obese', predictors=predictors, categorical_predictors=categorical_predictors
     )
+
+    # Analyze dataset completeness
+    calculable_data_size, calculable_percentage = analyze_dataset_completeness(
+        combined_data, predictors, categorical_predictors
+    )
+
+    # Output the analysis
+    print("[Summary] Dataset Completeness Analysis:")
+    print(f"  - Total rows: {combined_data.shape[0]}")
+    print(f"  - Total columns: {combined_data.shape[1]}")
+    print(f"  - Calculable rows: {calculable_data_size}")
+    print(f"  - Percentage of calculable data: {calculable_percentage:.2f}%")
+
+    print("[Debug] Calling validate_and_prepare_data with:")
+    print("  - Numeric predictors:", [col for col in predictors if col not in categorical_predictors])
+    print("  - Categorical predictors:", categorical_predictors)
 
     validate_and_prepare_data(combined_data, predictors, categorical_predictors)
 
+    # Analyze unused columns
+    numeric_unused, categorical_unused = analyze_unused_columns(combined_data, predictors)
+
     # Step 5: Summarize Predictors
-    summarize_predictor_statistics(combined_data, predictors, categorical_predictors)
+    summarize_predictor_statistics(combined_data, predictors)
+
+    # Separate numeric predictors for visualization
+    numeric_predictors = [
+        col for col in predictors if pd.api.types.is_numeric_dtype(combined_data[col])
+    ]
+
+    summarize_and_visualize_dataset(combined_data, predictors, numeric_predictors, categorical_predictors,
+                                    target='Obese')
 
     print("[Info] Workflow completed successfully.")
 
