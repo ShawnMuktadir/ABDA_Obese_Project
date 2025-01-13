@@ -83,6 +83,9 @@ def define_predictors(df):
     demographic_numeric = ['Age(years)', 'Income']
     demographic_categorical = ['Gender', 'Education', 'LocationDesc']
 
+    # Adding derived features to predictors
+    derived_features = ['Sedentary_to_Physical_Ratio', 'Income_to_Calorie_Ratio']
+
     # Ensure 'Gender', 'Education', and 'LocationDesc' are processed as categorical
     categorical_predictors = [
         col for col in demographic_categorical
@@ -115,6 +118,43 @@ def define_predictors(df):
     print("[Debug] Categorical Predictors:", categorical_predictors)
 
     return predictors, categorical_predictors
+
+def add_derived_features(df):
+    """
+    Adds derived features to the dataset:
+    - Ratio of sedentary time to physical activity time.
+    - Income-to-calorie-consumption ratio.
+    """
+    print("[Info] Adding derived features...")
+
+    # Ratio of sedentary time to physical activity time
+    if 'No_Physical_Activity' in df.columns and 'Low_Fruit_Consumption' in df.columns:
+        # Using 'No_Physical_Activity' as sedentary time proxy and 'Low_Fruit_Consumption' for physical activity proxy
+        df['Sedentary_to_Physical_Ratio'] = df['No_Physical_Activity'] / (
+            df['Low_Fruit_Consumption'] + 1e-5)  # Avoid division by zero
+        print("[Debug] Added 'Sedentary_to_Physical_Ratio' derived feature.")
+    else:
+        print("[Warning] Required columns for 'Sedentary_to_Physical_Ratio' not found.")
+
+    # Income-to-calorie-consumption ratio
+    if 'Income' in df.columns and 'Low_Fruit_Consumption' in df.columns and 'Low_Veg_Consumption' in df.columns:
+        # Using 'Low_Fruit_Consumption' + 'Low_Veg_Consumption' as calorie consumption proxy
+        df['Income_to_Calorie_Ratio'] = df['Income'] / (
+            df['Low_Fruit_Consumption'] + df['Low_Veg_Consumption'] + 1e-5)  # Avoid division by zero
+        print("[Debug] Added 'Income_to_Calorie_Ratio' derived feature.")
+    else:
+        print("[Warning] Required columns for 'Income_to_Calorie_Ratio' not found.")
+
+    # Debug: Show first 5 rows of derived features
+    if 'Sedentary_to_Physical_Ratio' in df.columns:
+        print("[Debug] Sample values for 'Sedentary_to_Physical_Ratio':")
+        print(df['Sedentary_to_Physical_Ratio'].head())
+    if 'Income_to_Calorie_Ratio' in df.columns:
+        print("[Debug] Sample values for 'Income_to_Calorie_Ratio':")
+        print(df['Income_to_Calorie_Ratio'].head())
+
+    return df
+
 
 def validate_and_prepare_data(df, predictors, categorical_predictors):
     print("[Info] Validating predictors...")
@@ -436,6 +476,22 @@ def summarize_and_visualize_dataset(data, predictors, numeric_predictors, catego
     # Visualize categorical predictors vs. target
     visualize_categorical_predictor_relationships(data, categorical_predictors, target)
 
+def summarize_data_matrix(df):
+    """
+    Summarize the data matrix structure and statistics.
+    """
+    print("[Summary] Data Matrix Overview:")
+    print(f"Number of rows: {df.shape[0]}")
+    print(f"Number of columns: {df.shape[1]}")
+    print("\n[Columns Overview]")
+    for col in df.columns:
+        dtype = df[col].dtype
+        unique_values = df[col].nunique()
+        print(f"- {col}: Type={dtype}, Unique Values={unique_values}")
+    print("\n[Target Variable]")
+    #print(f"Target column ('Obese') distribution:\n{df['Obese'].value_counts(normalize=True)}")
+
+
 def main():
     """
     Main function to execute the workflow.
@@ -453,6 +509,9 @@ def main():
     for col in column_names:
         print(col)
     df = process_and_calculate_predictors(df)
+    df = add_derived_features(df)
+
+    summarize_data_matrix(df)
 
     # Step 2: Process Obesity Data
     combined_data = process_obesity_data(df)
