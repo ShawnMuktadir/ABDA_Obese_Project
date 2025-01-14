@@ -3,20 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="\dir\correlation_matrix.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\dir\correlation_matrix_with_all_columns.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\dir\correlation_matrix_with_all_columns_and_mapped_questions.csv">
           <value>
             <Attribute>
@@ -24,42 +10,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\dir\correlation_matrix_with_demographics.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\dir\correlation_matrix_with_demographics_fixed.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\dir\filtered_nutrition_data.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\dir\filtered_nutrition_data_with_all_columns.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\dir\filtered_nutrition_data_with_all_columns_and_mapped_questions.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\dir\filtered_nutrition_data_with_demographics.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

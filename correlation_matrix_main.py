@@ -1,3 +1,5 @@
+from sklearn.preprocessing import StandardScaler
+
 from utils.predictor.location_desc import preprocess_location
 
 import arviz as az
@@ -129,6 +131,12 @@ final_features = [feature for feature in final_features if feature not in redund
 print("\nFinal selected features after ensuring inclusion of one-hot encoded Race/Ethnicity columns and other features:")
 print(final_features)
 
+# Ensure categorical columns are in final_features
+for col in ['Gender', 'Education', 'LocationDesc']:
+    if col not in final_features and col in pivot_df.columns:
+        print(f"[Debug] Adding '{col}' to final features.")
+        final_features.append(col)
+
 # Save the filtered dataset with updated selected features
 selected_df = pivot_df[final_features]
 output_path = 'dir/filtered_nutrition_data_with_race_and_mapped_questions.csv'
@@ -188,6 +196,18 @@ def bayesian_logistic_regression(df, target, predictors):
         raise TypeError(
             f"[Error] Predictors matrix 'X' contains non-numeric data. Column data types:\n{pd.DataFrame(X).dtypes}")
 
+    # Check for NaNs in X (for pandas DataFrame)
+    if pd.isna(X).any().any():
+        print("[Debug] NaN values detected in X. Replacing with column means.")
+        X = X.fillna(X.mean())
+
+    # Convert to NumPy array for further processing
+    X = X.values
+
+    # Debug: Check predictors after handling NaNs
+    print("[Debug] X after replacing NaNs (first 5 rows):")
+    print(X[:5])
+
     # Check for NaNs or infinities in X and y
     if np.isnan(X).any() or np.isnan(y).any():
         raise ValueError("[Error] NaN values detected in predictors or target.")
@@ -244,73 +264,118 @@ def preprocess_categorical(df, categorical_columns):
     """
     # Use one-hot encoding for categorical columns
     df_encoded = pd.get_dummies(df, columns=categorical_columns, drop_first=True)
+
+    # Convert all boolean columns to numeric (0/1)
+    for col in df_encoded.select_dtypes(include=['bool']).columns:
+        df_encoded[col] = df_encoded[col].astype(int)
     return df_encoded
+
+def preprocess_data(df, predictors):
+    """
+    Preprocesses the DataFrame to ensure all predictors are numeric.
+    Converts categorical variables to numeric using one-hot encoding or label encoding.
+    """
+    processed_df = df.copy()
+    for col in predictors:
+        if not pd.api.types.is_numeric_dtype(processed_df[col]):
+            print(f"[Info] Converting non-numeric column '{col}' to numeric values.")
+            if processed_df[col].nunique() <= 2:  # Binary categorical column
+                # Label encode binary categorical column (e.g., 'Male', 'Female' -> 0, 1)
+                processed_df[col] = processed_df[col].astype('category').cat.codes
+            else:
+                # One-hot encode for multi-category
+                one_hot = pd.get_dummies(processed_df[col], prefix=col)
+                processed_df = pd.concat([processed_df, one_hot], axis=1)
+                processed_df.drop(columns=[col], inplace=True)
+    return processed_df
 
 def bayesian_logistic_regression(df, target, predictors):
     """
     Performs Bayesian Logistic Regression using PyMC.
     """
-    # Preprocess predictors to ensure all are numeric
-    X = clean_predictors(df, predictors).values
+
+    # Preprocess predictors and target column
+    df = preprocess_data(df, predictors)
+
+    # Align predictors with available columns in df
+    aligned_predictors = [col for col in predictors if col in df.columns]
+
+    # Debug: Check for non-numeric values in predictors
+    for col in aligned_predictors:
+        invalid_rows = df[~df[col].apply(lambda x: pd.api.types.is_number(x))]
+        if not invalid_rows.empty:
+            print(f"[Debug] Invalid values detected in column '{col}':")
+            print(invalid_rows[[col]].head())  # Print a few invalid values for debugging
+            raise ValueError(f"[Error] Column '{col}' contains non-numeric values. Please clean the data.")
+
+    # Preprocess predictors: Convert to numeric (ensures errors are handled)
+    X = df[aligned_predictors].apply(pd.to_numeric, errors='coerce')
+
+    # Convert DataFrame to NumPy array (ensure float type)
+    X = X.astype(float).to_numpy()
+
+    # Check and handle NaN values
+    if np.isnan(X).any():
+        print("[Debug] NaN values detected in X. Replacing with column means.")
+        col_means = np.nanmean(X, axis=0)
+        nan_indices = np.where(np.isnan(X))
+        X[nan_indices] = np.take(col_means, nan_indices[1])
+
+    # Scale predictors
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    # Validate target
     y = df[target].values
+    if not np.array_equal(np.unique(y), [0, 1]):
+        raise ValueError("[Error] Target variable 'y' contains non-binary or invalid values.")
 
-    # Debug: Show predictor names and corresponding data
-    print("[Debug] Predictor Mapping and Sample Data:")
-    for idx, predictor in enumerate(predictors):
-        print(f"Column {idx}: {predictor}")
+    # Debug: Check predictors and target
+    print("[Debug] X shape:", X.shape, "y shape:", y.shape)
 
-    # Debug: Show the first few rows of the predictor matrix
-    print("[Debug] X sample data (first 5 rows):")
-    print(pd.DataFrame(X, columns=predictors).head())
-
-    # Debug: Inspect data types and content
-    print("[Debug] X shape:", X.shape)
-    print("[Debug] y shape:", y.shape)
-
-    # Build the PyMC model
+    # Build PyMC model
     with pm.Model() as model:
-        beta = pm.Normal("beta", mu=0, sigma=1, shape=X.shape[1])
-        intercept = pm.Normal("intercept", mu=0, sigma=1)
+        beta = pm.Normal("beta", mu=0, sigma=0.5, shape=X.shape[1])  # Stronger prior
+        intercept = pm.Normal("intercept", mu=0, sigma=0.5)  # Stronger prior
         logits = intercept + pm.math.dot(X, beta)
         y_obs = pm.Bernoulli("y_obs", logit_p=logits, observed=y)
+
+        # Debug: Check model log-probability
+        logp_func = model.compile_logp()
+        logp_value = logp_func(model.initial_point())
+        print(f"[Debug] Model log-probability: {logp_value}")
 
         # Sampling
         trace = pm.sample(draws=1000, tune=2000, chains=2, cores=2, target_accept=0.95)
 
-    # Debug: Posterior Summary
+    # Debug: Posterior summary
     summary = az.summary(trace, hdi_prob=0.95)
     print("[Debug] Posterior summary:")
     print(summary)
 
-    # Plotting
+    # Plot posterior distributions
     az.plot_forest(trace, var_names=["beta"], combined=True)
     plt.title("Posterior Coefficients")
     plt.show()
 
     return trace, model
 
-# Define target and predictors for Bayesian Logistic Regression
-target_column = 'Obesity_Binary'
-predictors = [col for col in final_features if col != target_column]
+if __name__ == '__main__':
+    # Define target and predictors for Bayesian Logistic Regression
+    target_column = 'Obesity_Binary'
 
-# Perform Bayesian Logistic Regression
-#try:
-    # Clean predictors before passing them to the model
+    # Define Obesity_Binary based on Overweight_Rate
+    if 'Overweight_Rate' in selected_df.columns:
+        selected_df['Obesity_Binary'] = (selected_df['Overweight_Rate'] > 30).astype(int)  # Example threshold
+        print("[Info] 'Obesity_Binary' column created based on 'Overweight_Rate' > 30.")
+    else:
+        raise KeyError("[Error] 'Overweight_Rate' column not found in selected_df. Cannot create 'Obesity_Binary'.")
 
-# Preprocess categorical columns
-selected_df = preprocess_categorical(selected_df, categorical_columns)
+    # Debug: Confirm 'Obesity_Binary' creation
+    print("[Debug] 'Obesity_Binary' column value counts:")
+    print(selected_df['Obesity_Binary'].value_counts())
 
-# Debug: Confirm all predictors are numeric
-print("[Debug] Predictor columns after encoding:")
-print(selected_df.head())
+    predictors = [col for col in final_features if col != target_column]
 
-X_cleaned = clean_predictors(df=selected_df,
-                            predictors=predictors)
-
-# Call the logistic regression function with cleaned data
-trace, model = bayesian_logistic_regression(df=selected_df,
-                                            target=target_column,
-                                            predictors=predictors)
-#except Exception as e:
-    # Debugging information
-    #print(f"[Debug] An error occurred during preprocessing or model fitting: {e}")
+    # Perform Bayesian Logistic Regression
+    trace, model = bayesian_logistic_regression(df=selected_df, target=target_column, predictors=predictors)
