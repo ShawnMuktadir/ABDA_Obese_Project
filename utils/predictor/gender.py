@@ -5,6 +5,7 @@ def preprocess_gender(df):
     Processes the 'Gender' column:
     - Maps gender values to readable categories.
     - Imputes missing/unknown values based on related predictors.
+    - Handles cases with entirely missing 'Gender' data.
     """
     if 'Gender' in df.columns:
         print("[Info] Processing 'Gender' column...")
@@ -44,10 +45,11 @@ def preprocess_gender(df):
             df['Gender'] = pd.Categorical(df['Gender'], categories=gender_map.values(), ordered=True)
             print("[Debug] Converted 'Gender' to categorical type.")
 
-        # Debug: Print final unique values
-        print("[Debug] Final unique values in 'Gender':", df['Gender'].cat.categories)
+        # Handle cases where 'Gender' remains empty after processing
+        if df['Gender'].isnull().all():
+            print("[Warning] 'Gender' column is entirely empty; filling with 'Unknown'.")
+            df['Gender'] = "Unknown"
     else:
         print("[Warning] 'Gender' column not found. No changes applied.")
 
     return df
-

@@ -32,19 +32,19 @@ def process_age_column(df):
     """
     if 'Age(years)' in df.columns:
         print("[Debug] Raw 'Age(years)' values before processing:")
-        print(df['Age(years)'].head(20))
+        #print(df['Age(years)'].head(20))
 
         # Convert age ranges to numeric midpoints
         df['Age(years)'] = df['Age(years)'].apply(convert_age_to_midpoint)
         print("[Debug] Processed 'Age(years)' values after conversion to midpoints:")
-        print(df['Age(years)'].head(20))
+        #print(df['Age(years)'].head(20))
 
         # Check missing percentages
         missing_before = df['Age(years)'].isna().mean() * 100
-        print(f"[Debug] Missing percentage in 'Age(years)' before imputation: {missing_before:.2f}%")
+        #print(f"[Debug] Missing percentage in 'Age(years)' before imputation: {missing_before:.2f}%")
 
         if missing_before > 50:
-            print("[Warning] High percentage of missing 'Age(years)'. Using group-based mean imputation.")
+            #print("[Warning] High percentage of missing 'Age(years)'. Using group-based mean imputation.")
             group_means = df.groupby(['Gender', 'Race/Ethnicity'])['Age(years)'].transform('mean')
             df['Age(years)'] = df['Age(years)'].fillna(group_means)
 
@@ -53,7 +53,7 @@ def process_age_column(df):
         df['Age(years)'] = df['Age(years)'].fillna(age_mean)
 
         missing_after = df['Age(years)'].isna().mean() * 100
-        print(f"[Debug] Missing percentage in 'Age(years)' after imputation: {missing_after:.2f}%")
+        #print(f"[Debug] Missing percentage in 'Age(years)' after imputation: {missing_after:.2f}%")
 
         # Confirm that the column is numeric
         if pd.api.types.is_numeric_dtype(df['Age(years)']):
